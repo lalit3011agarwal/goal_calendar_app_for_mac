@@ -26,17 +26,19 @@
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 600;
+            margin-top: 5px;
             margin-bottom: 4px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
             color: #71717a;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
         }
 
         .controls {
@@ -111,7 +113,8 @@
 
         .preview-container {
             position: relative;
-            margin-bottom: 20px;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
 
         .preview-label {
@@ -252,6 +255,7 @@
             font-weight: 600;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -415,12 +419,12 @@
         </div>
         <div class="control-group">
             <label>Size %</label>
-            <input type="number" id="scale" value="100" min="10" max="500" step="10">
+            <input type="number" id="scale" value="200" min="10" max="500" step="10">
         </div>
-    </div>
-
-    <div class="actions" style="margin-bottom: 20px;">
-        <button class="btn btn-primary" id="generateBtn">Generate Wallpaper</button>
+        <div class="control-group" style="justify-content: flex-end;">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" id="generateBtn">Generate</button>
+        </div>
     </div>
 
     <div class="preview-container">
@@ -702,7 +706,7 @@
                 if (i < daysPassed) {
                     ctx.fillStyle = theme.cellFilled;
                 } else if (i === daysPassed) {
-                    ctx.fillStyle = theme.today;
+                    ctx.fillStyle = accentColor || theme.today;
                 } else {
                     ctx.fillStyle = theme.cellEmpty;
                 }
@@ -722,7 +726,7 @@
             ctx.fillText(statsText, width / 2, statsY);
             
             // Redraw days part in accent color
-            ctx.fillStyle = theme.today;
+            ctx.fillStyle = accentColor || theme.today;
             ctx.textAlign = 'left';
             const fullWidth = ctx.measureText(statsText).width;
             ctx.fillText(`${daysRemaining}d left`, width / 2 - fullWidth / 2, statsY);
@@ -738,7 +742,7 @@
                 height: heightInput.value,
                 theme: themeSelect.value,
                 accent: accentColorInput.value.replace('#', ''),
-                scale: (parseInt(scaleInput.value) / 100).toFixed(2)
+                scale: (parseInt(scaleInput.value) / 200).toFixed(2)
             });
             return `${BASE_URL}/goal?${params.toString()}`;
         }
