@@ -1,4 +1,9 @@
-const { createCanvas } = require('@napi-rs/canvas');
+const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
+const path = require('path');
+
+// Register font for serverless environment (Vercel has no system fonts)
+const fontPath = path.join(__dirname, 'fonts', 'Inter-Medium.ttf');
+GlobalFonts.registerFromPath(fontPath, 'Inter');
 
 const themes = {
     dark: {
@@ -109,7 +114,7 @@ function generateWallpaper(config) {
 
     // Draw title (goal name) above the grid
     ctx.fillStyle = theme.text;
-    ctx.font = `${titleSize}px Arial, Helvetica, sans-serif`;
+    ctx.font = `${titleSize}px Inter`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(goal, width / 2, gridTop - gap * 2.5);
@@ -138,7 +143,7 @@ function generateWallpaper(config) {
     }
 
     // Draw bottom stats: "85d left · 65%"
-    ctx.font = `${statsSize}px Arial, Helvetica, sans-serif`;
+    ctx.font = `${statsSize}px Inter`;
     ctx.textAlign = 'center';
     
     // Same distance from dots as title (2.5 gaps)
