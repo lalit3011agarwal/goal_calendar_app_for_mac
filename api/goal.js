@@ -1,4 +1,14 @@
-const { createCanvas } = require('@napi-rs/canvas');
+const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
+const path = require('path');
+
+// Register system font (Inter or fallback)
+try {
+    // Try to use bundled font if available
+    const fontPath = path.join(__dirname, 'Inter-Medium.ttf');
+    GlobalFonts.registerFromPath(fontPath, 'Inter');
+} catch (e) {
+    // Font registration failed, will use fallback
+}
 
 const themes = {
     dark: {
@@ -109,7 +119,7 @@ function generateWallpaper(config) {
 
     // Draw title (goal name) above the grid
     ctx.fillStyle = theme.text;
-    ctx.font = `500 ${titleSize}px sans-serif`;
+    ctx.font = `${titleSize}px Inter, Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(goal, width / 2, gridTop - gap * 2.5);
@@ -138,7 +148,7 @@ function generateWallpaper(config) {
     }
 
     // Draw bottom stats: "85d left · 65%"
-    ctx.font = `500 ${statsSize}px sans-serif`;
+    ctx.font = `${statsSize}px Inter, Arial, sans-serif`;
     ctx.textAlign = 'center';
     
     // Same distance from dots as title (2.5 gaps)
