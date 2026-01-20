@@ -64,7 +64,12 @@ function generateWallpaper(config) {
     const theme = themes[themeName] || themes.dark;
     const start = new Date(startDate);
     const end = new Date(goalDate);
-    const today = new Date();
+    
+    // Get current time in IST (UTC+5:30)
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    const today = new Date(utcTime + istOffset);
     today.setHours(0, 0, 0, 0);
 
     const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
