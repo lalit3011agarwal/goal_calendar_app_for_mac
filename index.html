@@ -368,7 +368,7 @@
 
         .footer {
             margin-top: 0px;
-            padding: 20px;
+            padding: 0px;
             text-align: center;
             font-size: 0.8rem;
             color: #52525b;
@@ -460,6 +460,8 @@
     </div>
 
     <p class="info-text">The URL generates a fresh image daily. Use it as your wallpaper source.</p>
+
+    <hr style="border: none; border-top: 1px solid #27272a; width: 100%; margin: 30px auto 15px;">
 
     <footer class="footer">
         Made by <a href="https://www.linkedin.com/in/lalit3011/" target="_blank">@lalit3011</a> · Laptop version of <a href="https://thelifecalendar.com/" target="_blank">thelifecalendar.com</a>
@@ -763,7 +765,7 @@
                 height: heightInput.value,
                 theme: themeSelect.value,
                 accent: accentColorInput.value.replace('#', ''),
-                scale: (parseInt(scaleInput.value) / 200).toFixed(2)
+                scale: (parseInt(scaleInput.value) / 100).toFixed(2)
             });
             return `${BASE_URL}/goal?${params.toString()}`;
         }
