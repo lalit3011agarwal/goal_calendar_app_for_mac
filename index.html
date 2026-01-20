@@ -82,7 +82,7 @@
         }
 
         .btn {
-            padding: 14px 28px;
+            padding: 10px 28px;
             border: none;
             border-radius: 10px;
             font-size: 0.9rem;
@@ -365,6 +365,23 @@
             background: #3f3f46;
             border-color: #6366F1;
         }
+
+        .footer {
+            margin-top: 0px;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #52525b;
+        }
+
+        .footer a {
+            color: #6366F1;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -383,7 +400,7 @@
     <div class="controls">
         <div class="control-group">
             <label>Goal Name</label>
-            <input type="text" id="goalName" value="Climb Everest 🏔️" placeholder="My Goal">
+            <input type="text" id="goalName" value="Climb Everest" placeholder="My Goal">
         </div>
         <div class="control-group">
             <label>Start Date</label>
@@ -443,6 +460,10 @@
     </div>
 
     <p class="info-text">The URL generates a fresh image daily. Use it as your wallpaper source.</p>
+
+    <footer class="footer">
+        Made by <a href="https://www.linkedin.com/in/lalit3011/" target="_blank">@lalit3011</a> · Laptop version of <a href="https://thelifecalendar.com/" target="_blank">thelifecalendar.com</a>
+    </footer>
 
     <!-- Steps Modal -->
     <div class="modal-overlay" id="stepsModal">
