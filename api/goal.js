@@ -200,7 +200,7 @@ module.exports = async function handler(req, res) {
 
         res.setHeader('Content-Type', 'image/png');
         res.setHeader('Content-Length', buffer.length);
-        res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.setHeader('Content-Disposition', `inline; filename="goal-wallpaper-${todayStr}.png"`);
         
         return res.send(buffer);
