@@ -67,7 +67,3 @@ vercel --prod
 - **Runtime:** Node.js (Vercel Serverless Functions)
 - **Canvas:** @napi-rs/canvas for high-quality image generation
 - **Hosting:** Vercel
-
-## 📝 License
-
-MIT
