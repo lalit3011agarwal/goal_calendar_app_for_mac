@@ -2,6 +2,8 @@
 
 A beautiful, minimalist goal countdown wallpaper generator for macOS. Track your goals visually with an auto-updating wallpaper that shows your progress every day.
 
+> 💻 Laptop version of [thelifecalendar.com](https://thelifecalendar.com/)
+
 ## ✨ Features
 
 - **Visual Progress Tracking** — See your goal progress as a dot grid that fills up daily
