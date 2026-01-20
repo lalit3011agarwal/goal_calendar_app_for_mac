@@ -1,0 +1,14 @@
+{
+  "name": "goal-calendar-wallpaper",
+  "version": "1.0.0",
+  "description": "Goal Calendar Wallpaper API for Vercel",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.44"
+  },
+  "keywords": ["wallpaper", "calendar", "goal", "countdown"],
+  "author": "",
+  "license": "MIT"
+}

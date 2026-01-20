@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Calendar App for Mac</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #71717a;
+            margin-bottom: 40px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 40px;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .control-group input,
+        .control-group select {
+            padding: 12px 16px;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            background: #141414;
+            color: #fafafa;
+            font-size: 0.9rem;
+            font-family: inherit;
+            min-width: 160px;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #6366F1;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: #27272a;
+            color: #fafafa;
+        }
+
+        .btn-secondary:hover {
+            background: #3f3f46;
+        }
+
+        .preview-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .preview-label {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-size: 0.75rem;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #wallpaperCanvas {
+            border-radius: 16px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .size-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            background: transparent;
+            color: #a1a1aa;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover,
+        .preset-btn.active {
+            border-color: #6366F1;
+            color: #6366F1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .color-picker input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: #52525b;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .url-display {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        .url-display input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            background: #141414;
+            color: #a1a1aa;
+            font-size: 0.85rem;
+            font-family: 'SF Mono', monospace;
+            text-align: center;
+        }
+
+        .url-display input:focus {
+            outline: none;
+            border-color: #6366F1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Goal Calendar App for Mac</h1>
+    <p class="subtitle">Minimalist countdown wallpapers with smart padding for lock screen time & password</p>
+
+    <div class="size-presets">
+        <button class="preset-btn" data-width="3024" data-height="1964">MacBook Pro 14"</button>
+        <button class="preset-btn" data-width="3456" data-height="2234">MacBook Pro 16"</button>
+        <button class="preset-btn" data-width="2560" data-height="1664">MacBook Air 13"</button>
+        <button class="preset-btn" data-width="2880" data-height="1864">MacBook Air 15"</button>
+        <button class="preset-btn" data-width="5120" data-height="2880">iMac 27"</button>
+        <button class="preset-btn" data-width="0" data-height="0">Custom</button>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label>Goal Name</label>
+            <input type="text" id="goalName" value="15 April 2026" placeholder="My Goal">
+        </div>
+        <div class="control-group">
+            <label>Start Date</label>
+            <input type="date" id="startDate" value="2025-08-15">
+        </div>
+        <div class="control-group">
+            <label>Goal Date</label>
+            <input type="date" id="goalDate" value="2026-04-15">
+        </div>
+        <div class="control-group">
+            <label>Width</label>
+            <input type="number" id="width" value="3024" min="800" max="5120">
+        </div>
+        <div class="control-group">
+            <label>Height</label>
+            <input type="number" id="height" value="1964" min="600" max="3840">
+        </div>
+        <div class="control-group">
+            <label>Theme</label>
+            <select id="theme">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="midnight">Midnight Blue</option>
+                <option value="forest">Forest</option>
+                <option value="sunset">Sunset</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Accent Color</label>
+            <div class="color-picker">
+                <input type="color" id="accentColor" value="#f97316">
+            </div>
+        </div>
+        <div class="control-group">
+            <label>Size %</label>
+            <input type="number" id="scale" value="100" min="10" max="500" step="10">
+        </div>
+    </div>
+
+    <div class="actions" style="margin-bottom: 30px;">
+        <button class="btn btn-primary" id="generateBtn">Generate Wallpaper</button>
+    </div>
+
+    <div class="preview-container">
+        <span class="preview-label">Preview</span>
+        <canvas id="wallpaperCanvas" width="756" height="491"></canvas>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="copyUrlBtn">Copy Image URL</button>
+        <button class="btn btn-secondary" id="downloadBtn">Download</button>
+    </div>
+
+    <div class="url-display">
+        <input type="text" id="imageUrl" readonly>
+    </div>
+
+    <p class="info-text">The URL generates a fresh image daily. Use it as your wallpaper source.</p>
+
+    <script>
+        const canvas = document.getElementById('wallpaperCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Elements
+        const goalNameInput = document.getElementById('goalName');
+        const startDateInput = document.getElementById('startDate');
+        const goalDateInput = document.getElementById('goalDate');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const themeSelect = document.getElementById('theme');
+        const accentColorInput = document.getElementById('accentColor');
+        const scaleInput = document.getElementById('scale');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyUrlBtn = document.getElementById('copyUrlBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const imageUrlInput = document.getElementById('imageUrl');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+
+        // Base URL - auto-detected from current location
+        const BASE_URL = window.location.origin;
+
+        // Theme configurations
+        const themes = {
+            dark: {
+                bg: '#1a1a1a',
+                text: '#9ca3af',
+                textMuted: '#6b7280',
+                cellFilled: '#ffffff',
+                cellEmpty: '#4b5563',
+                today: '#f97316'
+            },
+            light: {
+                bg: '#fafafa',
+                text: '#374151',
+                textMuted: '#6b7280',
+                cellFilled: '#1f2937',
+                cellEmpty: '#d1d5db',
+                today: '#f97316'
+            },
+            midnight: {
+                bg: '#0f172a',
+                text: '#94a3b8',
+                textMuted: '#64748b',
+                cellFilled: '#e2e8f0',
+                cellEmpty: '#475569',
+                today: '#f97316'
+            },
+            forest: {
+                bg: '#0a0f0d',
+                text: '#9ca3af',
+                textMuted: '#6b7280',
+                cellFilled: '#d1fae5',
+                cellEmpty: '#374151',
+                today: '#10b981'
+            },
+            sunset: {
+                bg: '#1a0a0a',
+                text: '#9ca3af',
+                textMuted: '#6b7280',
+                cellFilled: '#fecaca',
+                cellEmpty: '#4b5563',
+                today: '#f97316'
+            }
+        };
+
+        // Preset buttons
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                presetBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Custom option (0,0) - don't change width/height inputs
+                if (btn.dataset.width !== '0') {
+                    widthInput.value = btn.dataset.width;
+                    heightInput.value = btn.dataset.height;
+                }
+                generateWallpaper();
+                updateUrlDisplay();
+            });
+        });
+
+        // Set today's date defaults
+        const today = new Date();
+        // Default: start from today, goal in 3 months
+        const defaultStart = new Date();
+        const defaultGoal = new Date();
+        defaultGoal.setMonth(defaultGoal.getMonth() + 3);
+
+        function generateWallpaper() {
+            const width = parseInt(widthInput.value);
+            const height = parseInt(heightInput.value);
+            const goalName = goalNameInput.value || 'My Goal';
+            const startDate = new Date(startDateInput.value);
+            const goalDate = new Date(goalDateInput.value);
+            const theme = themes[themeSelect.value];
+            const accentColor = accentColorInput.value;
+
+            // Calculate days
+            const totalDays = Math.ceil((goalDate - startDate) / (1000 * 60 * 60 * 24));
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const daysPassed = Math.max(0, Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)));
+            const daysRemaining = Math.max(0, Math.ceil((goalDate - today) / (1000 * 60 * 60 * 24)));
+
+            // Set canvas size for preview (25% of actual)
+            const previewScale = 0.25;
+            canvas.width = width * previewScale;
+            canvas.height = height * previewScale;
+            canvas.style.width = `${width * previewScale}px`;
+            canvas.style.height = `${height * previewScale}px`;
+
+            // Create offscreen canvas at full resolution
+            const fullCanvas = document.createElement('canvas');
+            fullCanvas.width = width;
+            fullCanvas.height = height;
+            const fullCtx = fullCanvas.getContext('2d');
+
+            // Draw on full canvas
+            const scale = parseInt(scaleInput.value) / 100;
+            drawWallpaper(fullCtx, width, height, {
+                goalName,
+                totalDays,
+                daysPassed,
+                daysRemaining,
+                theme,
+                accentColor,
+                goalDate,
+                scale
+            });
+
+            // Scale down for preview
+            ctx.drawImage(fullCanvas, 0, 0, canvas.width, canvas.height);
+
+            // Store full canvas for download
+            canvas.fullCanvas = fullCanvas;
+        }
+
+        function drawWallpaper(ctx, width, height, options) {
+            const { goalName, totalDays, daysPassed, daysRemaining, theme, accentColor, goalDate, scale = 1 } = options;
+            const progress = totalDays > 0 ? Math.round((daysPassed / totalDays) * 100) : 0;
+
+            // Background
+            ctx.fillStyle = theme.bg;
+            ctx.fillRect(0, 0, width, height);
+
+            // macOS lock screen safe zones
+            const topPadding = 500;
+            const bottomPadding = 400;
+            const safeHeight = height - topPadding - bottomPadding;
+            const safeCenterY = topPadding + safeHeight / 2;
+
+            // Grid layout: 30 columns
+            const cols = 30;
+            const rows = Math.ceil(totalDays / cols);
+
+            // Grid size with scale (default 1.0 = 25% of screen width)
+            const baseGridWidth = width * 0.25;
+            const gridWidth = baseGridWidth * scale;
+            const gap = gridWidth / cols;
+            const dotRadius = gap * 0.40;
+
+            // Text sizes scale proportionally
+            const titleSize = safeHeight * 0.04 * scale;
+            const statsSize = safeHeight * 0.03 * scale;
+
+            // Center the grid in the safe zone
+            const actualGridWidth = cols * gap;
+            const actualGridHeight = rows * gap;
+            const gridLeft = (width - actualGridWidth) / 2 + gap / 2;
+            const gridTop = safeCenterY - actualGridHeight / 2 + gap / 2;
+
+            // Draw title (goal name) above the grid
+            ctx.fillStyle = theme.text;
+            ctx.font = `500 ${titleSize}px Inter, -apple-system, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(goalName, width / 2, gridTop - gap * 2.5);
+
+            // Draw dots
+            for (let i = 0; i < totalDays; i++) {
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                const x = gridLeft + col * gap;
+                const y = gridTop + row * gap;
+
+                ctx.beginPath();
+                ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+
+                if (i < daysPassed) {
+                    ctx.fillStyle = theme.cellFilled;
+                } else if (i === daysPassed) {
+                    ctx.fillStyle = theme.today;
+                } else {
+                    ctx.fillStyle = theme.cellEmpty;
+                }
+                ctx.fill();
+            }
+
+            // Draw bottom stats: "85d left · 65%"
+            // Same distance from dots as title (2.5 gaps)
+            const statsY = gridTop + actualGridHeight - gap + gap * 2.5;
+            ctx.font = `500 ${statsSize}px Inter, -apple-system, sans-serif`;
+            ctx.textAlign = 'center';
+            
+            const statsText = `${daysRemaining}d left  ·  ${progress}%`;
+            
+            // Draw full text in muted color first
+            ctx.fillStyle = theme.textMuted;
+            ctx.fillText(statsText, width / 2, statsY);
+            
+            // Redraw days part in accent color
+            ctx.fillStyle = theme.today;
+            ctx.textAlign = 'left';
+            const fullWidth = ctx.measureText(statsText).width;
+            ctx.fillText(`${daysRemaining}d left`, width / 2 - fullWidth / 2, statsY);
+        }
+
+        // Generate the API URL
+        function getImageUrl() {
+            const params = new URLSearchParams({
+                goal: goalNameInput.value || 'My Goal',
+                start_date: startDateInput.value,
+                goal_date: goalDateInput.value,
+                width: widthInput.value,
+                height: heightInput.value,
+                theme: themeSelect.value,
+                accent: accentColorInput.value.replace('#', ''),
+                scale: (parseInt(scaleInput.value) / 100).toFixed(2)
+            });
+            return `${BASE_URL}/goal?${params.toString()}`;
+        }
+
+        // Update URL display
+        function updateUrlDisplay() {
+            imageUrlInput.value = getImageUrl();
+        }
+
+        // Copy URL to clipboard
+        copyUrlBtn.addEventListener('click', async () => {
+            const url = getImageUrl();
+            try {
+                await navigator.clipboard.writeText(url);
+                copyUrlBtn.textContent = 'Copied!';
+                setTimeout(() => copyUrlBtn.textContent = 'Copy Image URL', 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                imageUrlInput.select();
+                document.execCommand('copy');
+                copyUrlBtn.textContent = 'Copied!';
+                setTimeout(() => copyUrlBtn.textContent = 'Copy Image URL', 2000);
+            }
+        });
+
+        // Download wallpaper
+        downloadBtn.addEventListener('click', () => {
+            if (canvas.fullCanvas) {
+                const link = document.createElement('a');
+                link.download = `goal-wallpaper.png`;
+                link.href = canvas.fullCanvas.toDataURL('image/png');
+                link.click();
+            }
+        });
+
+        // Generate on input change
+        generateBtn.addEventListener('click', () => {
+            generateWallpaper();
+            updateUrlDisplay();
+        });
+        
+        // Auto-generate on any input change
+        [goalNameInput, startDateInput, goalDateInput, widthInput, heightInput, themeSelect, accentColorInput, scaleInput].forEach(input => {
+            input.addEventListener('change', () => {
+                generateWallpaper();
+                updateUrlDisplay();
+            });
+        });
+
+        // Initial generation
+        generateWallpaper();
+        updateUrlDisplay();
+    </script>
+</body>
+</html>
